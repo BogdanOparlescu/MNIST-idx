@@ -1,4 +1,6 @@
-#include "algebra.h"
+#include<stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 class mnist_set
 {
@@ -15,16 +17,16 @@ public:
         this->label = label;
     }
 
-    mnist_set LoadNext(FILE *img, FILE *labels)
+    void LoadNext(FILE *img, FILE *labels)
     {
-        for(int i=0;i<28;i++)
-            fread(image[i],28,sizeof(uint8_t),img);
-        fread(&label,1,sizeof(uint8_t),labels);
+        for (int i = 0; i < 28; i++)
+            fread(image[i], 28, sizeof(uint8_t), img);
+        fread(&label, 1, sizeof(uint8_t), labels);
     }
 
     void star()
     {
-        printf("Label is %i\n",label);
+        printf("Label is %i\n", label);
         for (int i = 0; i < 28; i++)
         {
             for (int j = 0; j < 28; j++)
