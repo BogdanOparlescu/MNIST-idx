@@ -1,64 +1,59 @@
-#include <iostream>
-#include <math.h>
-#include <time.h>
+#include<time.h>
+#include<iostream>
 
+template<typename T = float>
 class Vector
 {
 public:
     int length;
-    float *data;
+    T *data;
 
     Vector() : length(0), data(nullptr) {}
 
     Vector(int length)
     {
         this->length = length;
-        this->data = (float *)malloc(sizeof(float) * length);
+        this->data = (T *)malloc(sizeof(T) * length);
     }
 
-    Vector(float *data, int length) : Vector(length)
+    Vector(T *data, int length) : Vector(length)
     {
         this->assign(data);
     }
 
-    Vector(const std::initializer_list<float> &values) : Vector(values.size())
+    Vector(const std::initializer_list<T> &values) : Vector(values.size())
     {
         int i = 0;
-        for (float value : values)
+        for (T value : values)
             this->data[i++] = value;
     }
 
-    float& operator[](int i)
+    T& operator[](int i)
     {
         return data[i];
     }
 
-    void copy(Vector v)
+    void copy(Vector<> v)
     {
         for (int i = 0; i < length; i++)
             data[i] = v.data[i];
     }
 
-    void assign(const int c)
-    {
-        assign((float)c);
-    }
-
-    void assign(const float c)
+    void assign(const T c)
     {
         for (int i = 0; i < length; i++)
             this->data[i] = c;
     }
 
-    void assign(float *data)
+    void assign(T *data)
     {
         for (int i = 0; i < length; i++)
             this->data[i] = data[i];
     }
     
-    static void concat(Vector &v, Vector c)
+    static void concat(Vector<T> &v, Vector<T> c)
     {
-        Vector concat = Vector(v.length + c.length);
+        Vector<T> concat = Vector(v.length + c.length);
         for (int i = 0; i < v.length; i++)
             concat.data[i] = v.data[i];
         for (int i = 0; i < c.length; i++)
@@ -66,9 +61,9 @@ public:
         v = concat;
     }
 
-    static void precat(Vector &v, Vector c)
+    static void precat(Vector<T> &v, Vector<T> c)
     {
-        Vector concat = Vector(v.length + c.length);
+        Vector<T> concat = Vector(v.length + c.length);
         for (int i = 0; i < c.length; i++)
             concat.data[i] = c.data[i];
         for (int i = 0; i < v.length; i++)
@@ -76,7 +71,7 @@ public:
         v = concat;
     }
 
-    friend std::ostream &operator<<(std::ostream &os, Vector v)
+    friend std::ostream &operator<<(std::ostream &os, Vector<T> v)
     {
         for (int i = 0; i < v.length; i++)
             os << v.data[i] << ' ';
@@ -84,21 +79,23 @@ public:
         return os;
     }
 
-    void Save(FILE *file)
+    static void Save(Vector<T> v,FILE *file)
     {
-        fwrite(&length, sizeof(int), 1, file);
-        fwrite(data, sizeof(float), length, file);
+        fwrite(&v.length, sizeof(int), 1, file);
+        fwrite(v.data, sizeof(T), v.length, file);
     }
 
-    static Vector Load(FILE *file)
+    static Vector<T> Load(FILE *file)
     {
         int length = 0;
         fread(&length, sizeof(int), 1, file);
-        Vector v = Vector(length);
-        fread(v.data, sizeof(float), length, file);
+        Vector<T> v = Vector(length);
+        fread(v.data, sizeof(T), length, file);
         return v;
     }
 };
+
+
 
 class Matrix
 {
@@ -129,13 +126,13 @@ public:
         }
     }
 
-    Matrix(Vector v):Matrix(v.length,1)
+    Matrix(Vector<> v):Matrix(v.length,1)
     {
         for(int i=0;i<v.length;i++)
             data[i][0]=v.data[i];
     }
 
-    static Matrix fromArray(Vector vector)
+    static Matrix fromArray(Vector<> vector)
     {
         Matrix m = Matrix(vector.length, 1);
         for (int i = 0; i < vector.length; i++)
@@ -143,9 +140,9 @@ public:
         return m;
     }
 
-    Vector toVector()
+    Vector<> toVector()
     {
-        Vector v = Vector(rows * cols);
+        Vector<> v = Vector<>(rows * cols);
         int k = 0;
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < cols; j++)
