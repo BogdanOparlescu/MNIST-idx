@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-class mnist_set
+class mnist_module
 {
 public:
     uint8_t image[28][28];
     uint8_t label;
 
-    mnist_set() {}
-    mnist_set(const char image[28][28], int label)
+    mnist_module() {}
+    mnist_module(const char image[28][28], int label)
     {
         for (int i = 0; i < 28; i++)
             for (int j = 0; j < 28; j++)
